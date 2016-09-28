@@ -1,80 +1,89 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://localhost:9000/topic/v1
 
-# babe-topic-service
+# BABE Topic Microservice
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Topic Microservice main goal is to classify a content into topics.
+ 
+It should encapsulates all underlying storage & cache and provide convenient interface for content client.
 
-## Questions Collection [/questions]
+# Group Topic
 
-### List All Questions [GET]
+## Topic Classification [/classify/{artId}]
 
++ Parameters
+    + artId (number, required) - Article ID
+
+### Classify by Article ID [POST]
+
+Classify an article's body into topics.
+
+**NB:**
+
+- If `artId` is not found, simply return **HTTP 404**.
+ 
 + Response 200 (application/json)
+    + Attributes (TopicResponse)
+        
++ Response 404 (application/json)
+    Return when `artId` is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+    + Attributes (DefaultError503)
 
-### Create a New Question [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+### Classify by Content [POST /classify]
 
+Classify a string content into topics.
+ 
 + Request (application/json)
+    + Attributes
+        + body: `Lorem Ipsum ...` (string, required) - The string to be classify.
+ 
++ Response 200 (application/json)
+    + Attributes (TopicResponse)
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
 
-+ Response 201 (application/json)
+    + Attributes (DefaultError503)
 
-    + Headers
 
-            Location: /questions/2
+# Data Structures
 
-    + Body
+## TopicResponse (object)
++ topic-128: `1`, `91` (array[number], required) - Topic indices on 128 cluster.
++ topic-512: `27`, `411` (array[number], required) - Topic indices on 512 cluster.
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
+## Error (object)
++ errCode (number) - Error Code
++ errMsg (string) - Error Message
+
+## DefaultError400 (Error)
++ errCode: `-1`
++ errMsg: Invalid Request
+
+## DefaultError401 (Error)
++ errCode: `-2`
++ errMsg: Authorization needed to access resource
+
+## DefaultError404 (Error)
++ errCode: `-5`
++ errMsg: Resource not found
+
+## DefaultError413 (Error)
++ errCode: `-14`
++ errMsg: Request Entity Too Large
+
+## DefaultError503 (Error)
++ errCode: `-10`
++ errMsg: Backend service is down
