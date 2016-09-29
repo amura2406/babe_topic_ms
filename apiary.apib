@@ -67,14 +67,14 @@ Classify a string content into topics.
 
 # Data Structures
 
-## TopicResponse (array[Topic])
-+ `topic-128` (array[number], required) - Topic indices on 128 cluster.
-+ `topic-256` (array[number], required) - Topic indices on 256 cluster.
-+ `topic-512` (array[number], required) - Topic indices on 512 cluster.
+## TopicResponse (object)
++ `topic-128` (array[Topic], optional) - Topic indices on 128 cluster.
++ `topic-256` (array[Topic], optional) - Topic indices on 256 cluster.
++ `topic-512` (array[Topic], optional) - Topic indices on 512 cluster.
 
 ## Topic (object)
-+ id (number, required) - Topic ID
-+ score (number, required) - Topic Score
++ id: `11` (number, required) - Topic ID
++ score: `0.91` (number, required) - Topic Score
 
 ## TopicRequest (object)
 + clusterType (array[string], required) - The type of classification.
