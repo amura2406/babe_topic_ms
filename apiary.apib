@@ -60,9 +60,14 @@ Classify a string content into topics.
 
 # Data Structures
 
-## TopicResponse (object)
+## TopicResponse (array[Topic])
 + `topic-128`: `1`, `91` (array[number], required) - Topic indices on 128 cluster.
++ `topic-256`: `9`, `88` (array[number], required) - Topic indices on 256 cluster.
 + `topic-512`: `27`, `411` (array[number], required) - Topic indices on 512 cluster.
+
+## Topic (object)
++ id (number, required) - Topic ID
++ score (number, required) - Topic Score
 
 ## Error (object)
 + errCode (number) - Error Code
