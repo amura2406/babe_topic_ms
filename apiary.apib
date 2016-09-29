@@ -22,6 +22,9 @@ Classify an article's body into topics.
 
 - If `artId` is not found, simply return **HTTP 404**.
  
++ Request (application/json)
+    + Attributes (TopicRequest)
+ 
 + Response 200 (application/json)
     + Attributes (TopicResponse)
         
@@ -39,9 +42,10 @@ Classify an article's body into topics.
 ### Classify by Content [POST /classify]
 
 Classify a string content into topics.
- 
+    
+
 + Request (application/json)
-    + Attributes
+    + Attributes (TopicRequest)
         + body: `Lorem Ipsum ...` (string, required) - The string to be classify.
  
 + Response 200 (application/json)
@@ -58,16 +62,27 @@ Classify a string content into topics.
     + Attributes (DefaultError503)
 
 
+
+
+
 # Data Structures
 
 ## TopicResponse (array[Topic])
-+ `topic-128`: `1`, `91` (array[number], required) - Topic indices on 128 cluster.
-+ `topic-256`: `9`, `88` (array[number], required) - Topic indices on 256 cluster.
-+ `topic-512`: `27`, `411` (array[number], required) - Topic indices on 512 cluster.
++ `topic-128` (array[number], required) - Topic indices on 128 cluster.
++ `topic-256` (array[number], required) - Topic indices on 256 cluster.
++ `topic-512` (array[number], required) - Topic indices on 512 cluster.
 
 ## Topic (object)
 + id (number, required) - Topic ID
 + score (number, required) - Topic Score
+
+## TopicRequest (object)
++ clusterType (array[string], required) - The type of classification.
+    + Members
+        + `topic-128`
+        + `topic-256`
+        + `topic-512`
++ max: `5` (number, optional) - Number of classification returned, default to 1.
 
 ## Error (object)
 + errCode (number) - Error Code
