@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://localhost:9000/topic/v1
+HOST: http://10.2.15.82:9000/v1
 
 # BABE Topic Microservice
 
@@ -12,6 +12,37 @@ Each of the cluster type has it's own configuration/mappings file, which should 
 It should encapsulates all underlying storage & cache and provide convenient interface for content client.
 
 # Group Topic
+
+## Topic Master Data [/topics/{clusterType}]
+
++ Parameters
+    + clusterType: `topic-128` (enum[string]) - The type of classification
+        + Members
+            + `topic-128`
+            + `topic-256`
+            + `topic-512`
+            + `tuotiao-topic-128`
+            + `tuotiao-topic-512`
+
+### Get Topic [GET /topics/{clusterType}/{topicId}]
+
+Returns the basic topic model which contains information such as label.
+
++ Parameters
+    + topicId: `11` (number) - Topic ID
+
++ Response 200 (application/json)
+    + Attributes (Topic)
+
++ Response 404 (application/json)
+    Return when `clusterType` or `topicId` is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
 
 ## Topic Classification [/classify/{artId}]
 
@@ -76,14 +107,17 @@ Classify a string content into topics.
 # Data Structures
 
 ## TopicResponse (object)
-+ `topic-128` (array[Topic], optional) - Topic indices on 128 cluster.
-+ `topic-256` (array[Topic], optional) - Topic indices on 256 cluster.
-+ `topic-512` (array[Topic], optional) - Topic indices on 512 cluster.
-+ `tuotiao-topic-128` (array[Topic], optional) - Tuotiao topic indices on 128 cluster.
-+ `tuotiao-topic-512` (array[Topic], optional) - Tuotiao topic indices on 512 cluster.
++ `topic-128` (array[TopicItem], optional) - Topic indices on 128 cluster.
++ `topic-256` (array[TopicItem], optional) - Topic indices on 256 cluster.
++ `topic-512` (array[TopicItem], optional) - Topic indices on 512 cluster.
++ `tuotiao-topic-128` (array[TopicItem], optional) - Tuotiao topic indices on 128 cluster.
++ `tuotiao-topic-512` (array[TopicItem], optional) - Tuotiao topic indices on 512 cluster.
 
 ## Topic (object)
 + id: `11` (number, required) - Topic ID
++ label: `Pilkada DKI` - Topic Label
+
+## TopicItem (Topic)
 + score: `0.91` (number, required) - Topic Score
 
 ## TopicRequest (object)
